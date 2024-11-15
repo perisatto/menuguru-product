@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.perisatto.fiapprj.menuguru.application.usecases.ProductUseCase;
-import com.perisatto.fiapprj.menuguru.domain.entities.product.Product;
+import com.perisatto.fiapprj.menuguru.domain.entities.Product;
 import com.perisatto.fiapprj.menuguru.infra.controllers.dtos.CreateProductRequestDTO;
 import com.perisatto.fiapprj.menuguru.infra.controllers.dtos.CreateProductResponseDTO;
 import com.perisatto.fiapprj.menuguru.infra.controllers.dtos.GetProductListResponseDTO;

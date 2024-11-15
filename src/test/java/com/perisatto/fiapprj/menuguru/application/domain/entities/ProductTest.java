@@ -1,4 +1,4 @@
-package com.perisatto.fiapprj.menuguru.application.domain.model;
+package com.perisatto.fiapprj.menuguru.application.domain.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.perisatto.fiapprj.menuguru.domain.entities.product.Product;
-import com.perisatto.fiapprj.menuguru.domain.entities.product.ProductType;
+import com.perisatto.fiapprj.menuguru.domain.entities.Product;
+import com.perisatto.fiapprj.menuguru.domain.entities.ProductType;
 import com.perisatto.fiapprj.menuguru.handler.exceptions.ValidationException;
 
 @ActiveProfiles(value = "test")

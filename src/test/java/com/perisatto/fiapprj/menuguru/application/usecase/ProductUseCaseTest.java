@@ -1,4 +1,4 @@
-package com.perisatto.fiapprj.menuguru.application.domain.service;
+package com.perisatto.fiapprj.menuguru.application.usecase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -11,8 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.perisatto.fiapprj.menuguru.application.interfaces.ProductRepository;
 import com.perisatto.fiapprj.menuguru.application.usecases.ProductUseCase;
-import com.perisatto.fiapprj.menuguru.domain.entities.product.Product;
-import com.perisatto.fiapprj.menuguru.domain.entities.product.ProductType;
+import com.perisatto.fiapprj.menuguru.domain.entities.Product;
+import com.perisatto.fiapprj.menuguru.domain.entities.ProductType;
 import com.perisatto.fiapprj.menuguru.handler.exceptions.NotFoundException;
 import com.perisatto.fiapprj.menuguru.handler.exceptions.ValidationException;
 

@@ -7,8 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.perisatto.fiapprj.menuguru.application.interfaces.ProductRepository;
-import com.perisatto.fiapprj.menuguru.domain.entities.product.Product;
-import com.perisatto.fiapprj.menuguru.domain.entities.product.ProductType;
+import com.perisatto.fiapprj.menuguru.domain.entities.Product;
+import com.perisatto.fiapprj.menuguru.domain.entities.ProductType;
 import com.perisatto.fiapprj.menuguru.handler.exceptions.NotFoundException;
 import com.perisatto.fiapprj.menuguru.handler.exceptions.ValidationException;
 
