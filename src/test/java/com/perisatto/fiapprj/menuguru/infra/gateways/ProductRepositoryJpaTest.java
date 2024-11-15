@@ -120,13 +120,67 @@ public class ProductRepositoryJpaTest {
 	}
 	
 	@Test
-	void givenValidProductType_thenlistAllProducts() {
+	void givenValidProductType_thenlistAllProducts() throws Exception {
+		
+		when(productRepository.findByIdProductTypeAndIdProductStatus(any(Long.class), any(Long.class), any()))
+		.thenAnswer(i -> {
+			List<ProductEntity> productList = new ArrayList<>();
+			
+			ProductEntity productEntity1 = getProductEntity();
+			productEntity1.setIdProduct(10L);
+			
+			productList.add(productEntity1);
+			
+			ProductEntity productEntity2 = getProductEntity();
+			productEntity2.setIdProduct(20L);
+			
+			productList.add(productEntity2);
+			
+			Page<ProductEntity> products = new PageImpl<>(productList);
+			
+			return products;
+		});
+		
+		productRepositoryJpa.findAll(50, 1, "ACOMPANHAMENTO");		
+		
 		verify(productRepository, times(1)).findByIdProductTypeAndIdProductStatus(any(Long.class), any(Long.class), any());
 	}
 	
 	@Test
-	void givenInvalidProductType_thenRefusesListProducts() {
-		verify(productRepository, times(0)).findByIdProductTypeAndIdProductStatus(any(Long.class), any(Long.class), any());
+	void givenValidaData_thenUpdateProduct() throws Exception {
+		ProductEntity productEntity = getProductEntity();
+		
+		when(productRepository.save(any()))
+		.thenReturn(productEntity);
+		
+		Product product = new Product(productEntity.getName(), ProductType.ACOMPANHAMENTO, productEntity.getDescription(), productEntity.getPrice(), base64ProductImage);
+		product.setId(10L);
+		
+		productRepositoryJpa.updateProduct(product);
+		
+		verify(productRepository, times(1)).save(any());
+	}
+	
+	@Test
+	void givenValidId_thenDeleteProduct() throws Exception {
+		ProductEntity productEntity = getProductEntity();
+		
+		when(productRepository.findById(any(Long.class)))
+		.thenReturn(Optional.of(productEntity));
+		
+		productRepositoryJpa.deleteProduct(10L);
+		
+		verify(productRepository, times(1)).save(any());
+	}
+	
+	@Test
+	void givenInvalidId_thenRefusesDeleteProduct() throws Exception {
+		when(productRepository.findById(any(Long.class)))
+		.thenReturn(Optional.empty());
+		
+		productRepositoryJpa.deleteProduct(10L);
+		
+		verify(productRepository, times(0)).save(any());
 	}
 	
 	private ProductEntity getProductEntity() {
