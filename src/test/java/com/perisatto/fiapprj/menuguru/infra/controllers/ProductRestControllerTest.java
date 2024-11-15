@@ -4,10 +4,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.LinkedHashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +30,7 @@ import com.perisatto.fiapprj.menuguru.application.usecases.ProductUseCase;
 import com.perisatto.fiapprj.menuguru.domain.entities.Product;
 import com.perisatto.fiapprj.menuguru.domain.entities.ProductType;
 import com.perisatto.fiapprj.menuguru.infra.controllers.dtos.CreateProductRequestDTO;
+import com.perisatto.fiapprj.menuguru.infra.controllers.dtos.UpdateProductRequestDTO;
 
 @ActiveProfiles(value = "test")
 public class ProductRestControllerTest {
@@ -86,6 +92,118 @@ public class ProductRestControllerTest {
 			.andExpect(status().isCreated());
 			
 			verify(productUseCase, times(1)).createProduct(any(String.class), any(), any(String.class), any(Double.class), any(String.class));
+		}
+	}
+	
+	@Nested
+	class RetrieveProduct {
+		
+		@Test
+		void givenValidaId_thenRetrieveProduct() throws Exception {
+			Product product = getProduct();
+			
+			when(productUseCase.getProduct(any(Long.class)))
+			.thenReturn(product);
+			
+			Long productId = 10L;
+			
+			mockMvc.perform(get("/products/{productId}", productId)
+					.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk());
+			
+			verify(productUseCase, times(1)).getProduct(any(Long.class));
+		}
+		
+		@Test
+		void listProducts() throws Exception {
+			when(productUseCase.findAllProducts(any(Integer.class), any(Integer.class), any()))
+			.thenAnswer(i -> {
+				Set<Product> result = new LinkedHashSet<Product>();
+				Product product1 = getProduct();
+				Product product2 = getProduct();
+				product2.setId(20L);
+				result.add(product1);
+				result.add(product2);
+				return result;
+			});
+			
+			mockMvc.perform(get("/products")
+					.contentType(MediaType.APPLICATION_JSON)
+					.param("_page", "1")
+					.param("_size", "50"))
+			.andExpect(status().isOk());
+			
+			verify(productUseCase, times(1)).findAllProducts(any(Integer.class), any(Integer.class), any());
+		}
+
+		@Test
+		void givenProductType_listProducts() throws Exception {
+			when(productUseCase.findAllProducts(any(Integer.class), any(Integer.class), any(String.class)))
+			.thenAnswer(i -> {
+				Set<Product> result = new LinkedHashSet<Product>();
+				Product product1 = getProduct();
+				Product product2 = getProduct();
+				product2.setId(20L);
+				result.add(product1);
+				result.add(product2);
+				return result;
+			});
+			
+			mockMvc.perform(get("/products")
+					.contentType(MediaType.APPLICATION_JSON)
+					.param("_page", "1")
+					.param("_size", "50")
+					.param("type", "LANCHE"))
+			.andExpect(status().isOk());
+			
+			verify(productUseCase, times(1)).findAllProducts(any(Integer.class), any(Integer.class), any(String.class));
+		}		
+	}
+	
+	@Nested
+	class DeleteProduct {
+		
+		@Test
+		void givenValidaId_thenDeleteProduct() throws Exception {
+			when(productUseCase.deleteProduct(any(Long.class)))
+			.thenReturn(true);
+			
+			Long productId = 10L;
+			
+			mockMvc.perform(delete("/products/{productId}", productId)
+					.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isNoContent());
+			
+			verify(productUseCase, times(1)).deleteProduct(any(Long.class));
+			
+		}		
+	}
+	
+	@Nested
+	class UpdateProduct {
+		
+		@Test
+		void givenValidData_thenUpdatesProduct() throws Exception {
+			Product product = getProduct();
+			
+			when(productUseCase.updateProduct(any(Long.class), any(String.class), any(String.class), any(String.class), any(Double.class), any(String.class)))
+			.thenReturn(product);
+			
+			UpdateProductRequestDTO requestMessage = new UpdateProductRequestDTO();
+			requestMessage.setName(product.getName());
+			requestMessage.setDescription(product.getDescription());
+			requestMessage.setProductType(product.getProductType().toString());
+			requestMessage.setPrice(product.getPrice());
+			requestMessage.setImage(product.getImage());
+			
+			Long productId = 10L;
+			
+			mockMvc.perform(patch("/products/{productId}", productId)
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(asJsonString(requestMessage)))
+			.andExpect(status().isOk());
+			
+			verify(productUseCase, times(1)).updateProduct(any(Long.class), any(String.class), any(String.class), any(String.class), any(Double.class), any(String.class));
 		}
 	}
 	
