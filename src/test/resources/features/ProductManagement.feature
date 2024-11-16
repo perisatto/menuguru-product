@@ -20,4 +20,4 @@ Feature: Product Management
 		 | name        | productType | description                                | price | image                                                                                        |
 		 | Suco de Uva | BEBIDA      | Suco integral de uva sem açucar adicionado | 9.00  | iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII= |
 		 When gives a new price
-		 Then updates the product information with new price 
+		 Then updates the product information with new price
