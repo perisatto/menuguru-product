@@ -1,4 +1,4 @@
-package com.perisatto.fiapprj.menuguru.domain.entities.product;
+package com.perisatto.fiapprj.menuguru.domain.entities;
 
 import java.io.ByteArrayInputStream;
 import java.net.URLConnection;

@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MenuguruApplication {
+public class MenuguruProductApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MenuguruApplication.class, args);
+		SpringApplication.run(MenuguruProductApplication.class, args);
 	}
 
 }

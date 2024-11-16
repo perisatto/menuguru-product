@@ -2,8 +2,8 @@ package com.perisatto.fiapprj.menuguru.infra.gateways.mappers;
 
 import java.util.Base64;
 
-import com.perisatto.fiapprj.menuguru.domain.entities.product.Product;
-import com.perisatto.fiapprj.menuguru.domain.entities.product.ProductType;
+import com.perisatto.fiapprj.menuguru.domain.entities.Product;
+import com.perisatto.fiapprj.menuguru.domain.entities.ProductType;
 import com.perisatto.fiapprj.menuguru.infra.persistences.entities.ProductEntity;
 
 

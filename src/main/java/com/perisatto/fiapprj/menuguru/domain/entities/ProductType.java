@@ -1,4 +1,4 @@
-package com.perisatto.fiapprj.menuguru.domain.entities.product;
+package com.perisatto.fiapprj.menuguru.domain.entities;
 
 public enum ProductType {
 	LANCHE(1L),

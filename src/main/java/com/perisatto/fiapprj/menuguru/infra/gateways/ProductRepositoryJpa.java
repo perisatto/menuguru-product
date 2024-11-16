@@ -11,8 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import com.perisatto.fiapprj.menuguru.application.interfaces.ProductRepository;
-import com.perisatto.fiapprj.menuguru.domain.entities.product.Product;
-import com.perisatto.fiapprj.menuguru.domain.entities.product.ProductType;
+import com.perisatto.fiapprj.menuguru.domain.entities.Product;
+import com.perisatto.fiapprj.menuguru.domain.entities.ProductType;
 import com.perisatto.fiapprj.menuguru.infra.gateways.mappers.ProductMapper;
 import com.perisatto.fiapprj.menuguru.infra.persistences.entities.ProductEntity;
 import com.perisatto.fiapprj.menuguru.infra.persistences.repositories.ProductPersistenceRepository;
