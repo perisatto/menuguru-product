@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: menuguru-product-deployment
+  labels:
+    menuguru.fiapprj.perisatto.com/name: product-service
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      menuguru.fiapprj.perisatto.com/name: product-service
+  template:
+    metadata:
+      name: menuguru-product-deployment
+      labels:
+        menuguru.fiapprj.perisatto.com/name: product-service
+    spec:           
+      containers:
+        - name: menuguru-service
+          image: rperisatto/menuguru-product:{{ .Values.image.tag }}
+          env:
+            - name: MYSQL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: menuguru-product-config
+                  key: mysql_url
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: menuguru-product-secret
+                  key: mysql_user      
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: menuguru-product-secret
+                  key: mysql_password
+          ports:
+            - containerPort: 8080      
+          readinessProbe:
+            httpGet:
+              path: /menuguru-products/v1/actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /menuguru-products/v1/actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 60
