@@ -120,7 +120,7 @@ public class ProductUseCaseTest {
 				verify(productRepository, times(1)).getProductById(any(Long.class));
 			}
 		}
-		
+
 		@Test
 		void listAllProducts() throws Exception {
 			when(productRepository.findAll(any(), any(), any()))
@@ -132,12 +132,12 @@ public class ProductUseCaseTest {
 				result.add(productData2);
 				return result;
 			});
-			
+
 			Set<Product> result = productUseCase.findAllProducts(null, null, null);
-			
+
 			assertThat(result.size()).isEqualTo(2);
 		}
-		
+
 		@Test
 		void givenInvalidProductType_thenRefusesRetrieveProduct() {
 			try {
@@ -146,7 +146,7 @@ public class ProductUseCaseTest {
 				assertThatExceptionOfType(ValidationException.class);
 			}
 		}
-		
+
 		@Test
 		void givenInvalidPage_thenRefusesRetrieveProduct() {
 			try {
@@ -155,7 +155,7 @@ public class ProductUseCaseTest {
 				assertThatExceptionOfType(ValidationException.class);
 			}
 		}
-		
+
 		@Test
 		void givenInvalidLimit_thenRefusesRetrieveProduct() {
 			try {
@@ -163,7 +163,7 @@ public class ProductUseCaseTest {
 			} catch (Exception e) {
 				assertThatExceptionOfType(ValidationException.class);
 			}
-			
+
 			try {
 				productUseCase.findAllProducts(60, null, null);
 			} catch (Exception e) {
@@ -204,6 +204,71 @@ public class ProductUseCaseTest {
 		}
 
 		@Test
+		void givenOnlyName_thenUpdatesProduct() throws Exception {
+			Product product = getProduct();
+
+			when(productRepository.getProductById(any(Long.class)))
+			.thenReturn(Optional.of(product));
+
+			when(productRepository.updateProduct(any(Product.class)))
+			.thenReturn(Optional.of(product));
+
+			productUseCase.updateProduct(product.getId(), product.getName(), null, null, null, null);
+
+			verify(productRepository, times(1)).updateProduct(any(Product.class));
+		}
+
+		@Test
+		void givenOthersThanName_thenUpdatesProduct() throws Exception {
+			Product product = getProduct();
+
+			when(productRepository.getProductById(any(Long.class)))
+			.thenReturn(Optional.of(product));
+
+			when(productRepository.updateProduct(any(Product.class)))
+			.thenReturn(Optional.of(product));
+
+			productUseCase.updateProduct(product.getId(), null, product.getProductType().toString(), product.getDescription(), product.getPrice(), product.getImage());
+
+			verify(productRepository, times(1)).updateProduct(any(Product.class));
+		}
+
+		@Test
+		void givenNoData_thenRefusesUpdatesProduct() throws Exception {
+			Product product = getProduct();
+
+			when(productRepository.getProductById(any(Long.class)))
+			.thenReturn(Optional.of(product));
+
+			when(productRepository.updateProduct(any(Product.class)))
+			.thenReturn(Optional.of(product));
+
+			try {
+				productUseCase.updateProduct(product.getId(), null, null, null, null, null);
+			} catch (Exception e) {
+				assertThatExceptionOfType(ValidationException.class);
+				verify(productRepository, times(0)).updateProduct(any(Product.class));
+			}
+		}
+
+		@Test
+		void whenThereIsDatabaseFail_thenUpdatesProduct() throws Exception {
+			Product product = getProduct();
+
+			when(productRepository.getProductById(any(Long.class)))
+			.thenReturn(Optional.of(product));
+
+			when(productRepository.updateProduct(any(Product.class)))
+			.thenReturn(Optional.empty());
+
+			try {
+				productUseCase.updateProduct(product.getId(), product.getName(), product.getProductType().toString(), product.getDescription(), product.getPrice(), product.getImage());
+			} catch (Exception e) {
+				assertThatExceptionOfType(Exception.class);
+			}
+		}
+
+		@Test
 		void givenInvalidId_thenRefusesUpdatesProduct() throws Exception {
 			Product product = getProduct();
 
@@ -231,25 +296,39 @@ public class ProductUseCaseTest {
 			return product;
 		}
 	}
-	
+
 	@Nested
 	class DeleteProduct {
-		
+
 		@Test
 		void givenValidId_thenDeleteProduct() throws Exception {
 			Product product = getProduct();
-			
+
 			when(productRepository.getProductById(any(Long.class)))
 			.thenReturn(Optional.of(product));
-			
+
 			when(productRepository.deleteProduct(any(Long.class)))
 			.thenReturn(true);
-			
+
 			productUseCase.deleteProduct(10L);
-			
+
 			verify(productRepository, times(1)).deleteProduct(any(Long.class));
 		}
-		
+
+		@Test
+		void givenInvalidId_thenRefusesDeleteProduct() throws Exception {			
+			when(productRepository.getProductById(any(Long.class)))
+			.thenReturn(Optional.empty());
+			
+			try {	
+				productUseCase.deleteProduct(10L);
+
+			} catch (Exception e) {
+				assertThatExceptionOfType(NotFoundException.class);
+				verify(productRepository, times(0)).deleteProduct(any(Long.class));
+			}
+		}
+
 		private Product getProduct() throws Exception {
 
 			String description = "O x-bacon é um sanduíche irresistível que une o sabor intenso do bacon crocante com queijo derretido"

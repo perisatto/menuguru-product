@@ -60,35 +60,49 @@ public class ProductUseCase {
 			String newDescription;
 			Double newPrice;
 			String newImage;
-
+			String argsValidator = "00000";
+			StringBuilder sbArgsValidator = new StringBuilder(argsValidator);
+			
 			if(name != null) {
 				newName = name;
 			} else {
 				newName = oldProductData.get().getName();
+				sbArgsValidator.setCharAt(0, '1');
 			}
 
 			if(type != null) {
 				newType = ProductType.valueOf(type);
 			} else {
 				newType = oldProductData.get().getProductType();
+				sbArgsValidator.setCharAt(1, '1');
 			}
 
 			if(description != null) {
 				newDescription = description;
 			} else {
 				newDescription = oldProductData.get().getDescription();
+				sbArgsValidator.setCharAt(2, '1');
 			}
 
 			if(price != null) {
 				newPrice = price;
 			} else {
 				newPrice = oldProductData.get().getPrice();
+				sbArgsValidator.setCharAt(3, '1');
 			}
 
 			if(image != null) {
 				newImage = image;
 			} else {
 				newImage = oldProductData.get().getImage();
+				sbArgsValidator.setCharAt(4, '1');
+			}
+			
+			argsValidator = sbArgsValidator.toString();
+							
+			if(argsValidator.equals("11111")) {
+				logger.error("Error while updating product data... no attributes to update.");
+				throw new ValidationException("prdt-2006", "Error while updating product data: no attributes to update");
 			}
 
 			Product newProductData = new Product(newName, newType, newDescription, newPrice, newImage);
@@ -101,7 +115,7 @@ public class ProductUseCase {
 			}
 			return updatedProductData.get();
 		}else {
-			throw new NotFoundException("prdt-2006", "Product not found");
+			throw new NotFoundException("prdt-2009", "Product not found");
 		}	
 	}
 
