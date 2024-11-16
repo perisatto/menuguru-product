@@ -54,6 +54,25 @@ public class ProductTest {
 			assertThat(e.getMessage()).contains("empty, null or blank name");
 		}		
 	}
+	
+	@Test
+	void givenBlankName_thenRefusesToCreateNewProduct() {
+		try {
+			String productName = " ";
+			String productDescription = "O x-bacon é um sanduíche irresistível que une o sabor intenso do bacon crocante com queijo derretido"
+					+ ", alface, tomate e um suculento hambúrguer, tudo envolto em um pão macio e tostado. "
+					+ "Uma explosão de sabores em cada mordida!";
+			Double productPrice = 35.50;
+			String productImage = base64ProductImage; 
+			
+			Product product = new Product(productName, ProductType.LANCHE, productDescription, productPrice, productImage);
+			
+			assertThat(product.getName()).isNotEqualTo(productName);
+		} catch (Exception e) {
+			assertThatExceptionOfType(ValidationException.class);
+			assertThat(e.getMessage()).contains("empty, null or blank name");
+		}		
+	}
 		
 	
 	@Test
@@ -106,6 +125,25 @@ public class ProductTest {
 		} catch (Exception e) {
 			assertThatExceptionOfType(ValidationException.class);
 			assertThat(e.getMessage()).contains("empty, null or blank description");
+		}		
+	}
+	
+	@Test
+	void givenNoType_thenRefusesToCreateNewProduct() {
+		try {
+			String productName = "X-Bacon";
+			String productDescription = "O x-bacon é um sanduíche irresistível que une o sabor intenso do bacon crocante com queijo derretido"
+					+ ", alface, tomate e um suculento hambúrguer, tudo envolto em um pão macio e tostado. "
+					+ "Uma explosão de sabores em cada mordida!";
+			Double productPrice = 35.50;
+			String productImage = base64ProductImage; 
+			
+			Product product = new Product(productName, null, productDescription, productPrice, productImage);
+			
+			assertThat(product.getName()).isNotEqualTo(productName);
+		} catch (Exception e) {
+			assertThatExceptionOfType(ValidationException.class);
+			assertThat(e.getMessage()).contains("blank type");
 		}		
 	}
 	
@@ -188,6 +226,63 @@ public class ProductTest {
 	
 	@Test
 	void givenNotImageFileAsProductImage_thenRefusesToCreateNewProduct() {
+		try {
+			String productName = "X-Bacon";
+			String productDescription = "O x-bacon é um sanduíche irresistível que une o sabor intenso do bacon crocante com queijo derretido"
+					+ ", alface, tomate e um suculento hambúrguer, tudo envolto em um pão macio e tostado. "
+					+ "Uma explosão de sabores em cada mordida!";
+			Double productPrice = 35.50;
+			String productImage = null; 
+			
+			Product product = new Product(productName, ProductType.LANCHE, productDescription, productPrice, productImage);
+			
+			assertThat(product.getName()).isNotEqualTo(productName);
+		} catch (Exception e) {
+			assertThatExceptionOfType(ValidationException.class);
+			assertThat(e.getMessage()).contains("empty, null or blank image");
+		}
+	}
+	
+	@Test
+	void givenEmptyFileAsProductImage_thenRefusesToCreateNewProduct() {
+		try {
+			String productName = "X-Bacon";
+			String productDescription = "O x-bacon é um sanduíche irresistível que une o sabor intenso do bacon crocante com queijo derretido"
+					+ ", alface, tomate e um suculento hambúrguer, tudo envolto em um pão macio e tostado. "
+					+ "Uma explosão de sabores em cada mordida!";
+			Double productPrice = 35.50;
+			String productImage = ""; 
+			
+			Product product = new Product(productName, ProductType.LANCHE, productDescription, productPrice, productImage);
+			
+			assertThat(product.getName()).isNotEqualTo(productName);
+		} catch (Exception e) {
+			assertThatExceptionOfType(ValidationException.class);
+			assertThat(e.getMessage()).contains("empty, null or blank image");
+		}
+	}
+	
+	@Test
+	void givenBlankFileAsProductImage_thenRefusesToCreateNewProduct() {
+		try {
+			String productName = "X-Bacon";
+			String productDescription = "O x-bacon é um sanduíche irresistível que une o sabor intenso do bacon crocante com queijo derretido"
+					+ ", alface, tomate e um suculento hambúrguer, tudo envolto em um pão macio e tostado. "
+					+ "Uma explosão de sabores em cada mordida!";
+			Double productPrice = 35.50;
+			String productImage = " "; 
+			
+			Product product = new Product(productName, ProductType.LANCHE, productDescription, productPrice, productImage);
+			
+			assertThat(product.getName()).isNotEqualTo(productName);
+		} catch (Exception e) {
+			assertThatExceptionOfType(ValidationException.class);
+			assertThat(e.getMessage()).contains("empty, null or blank image");
+		}
+	}
+	
+	@Test
+	void givenInvalidFileTypeAsProductImage_thenRefusesToCreateNewProduct() {
 		try {
 			String productName = "X-Bacon";
 			String productDescription = "O x-bacon é um sanduíche irresistível que une o sabor intenso do bacon crocante com queijo derretido"
