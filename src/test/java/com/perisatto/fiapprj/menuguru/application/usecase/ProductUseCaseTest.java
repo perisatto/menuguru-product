@@ -1,13 +1,15 @@
 package com.perisatto.fiapprj.menuguru.application.usecase;
 
-import static org.assertj.core.api.Assertions.assertThatException;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.LinkedHashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -118,6 +120,56 @@ public class ProductUseCaseTest {
 				verify(productRepository, times(1)).getProductById(any(Long.class));
 			}
 		}
+		
+		@Test
+		void listAllProducts() throws Exception {
+			when(productRepository.findAll(any(), any(), any()))
+			.thenAnswer(i -> {
+				Set<Product> result = new LinkedHashSet<Product>();
+				Product productData1 = getProduct();
+				Product productData2 = getProduct();
+				result.add(productData1);
+				result.add(productData2);
+				return result;
+			});
+			
+			Set<Product> result = productUseCase.findAllProducts(null, null, null);
+			
+			assertThat(result.size()).isEqualTo(2);
+		}
+		
+		@Test
+		void givenInvalidProductType_thenRefusesRetrieveProduct() {
+			try {
+				productUseCase.findAllProducts(null, null, "ENTRADA");
+			} catch (Exception e) {
+				assertThatExceptionOfType(ValidationException.class);
+			}
+		}
+		
+		@Test
+		void givenInvalidPage_thenRefusesRetrieveProduct() {
+			try {
+				productUseCase.findAllProducts(null, 0, null);
+			} catch (Exception e) {
+				assertThatExceptionOfType(ValidationException.class);
+			}
+		}
+		
+		@Test
+		void givenInvalidLimit_thenRefusesRetrieveProduct() {
+			try {
+				productUseCase.findAllProducts(-1, null, null);
+			} catch (Exception e) {
+				assertThatExceptionOfType(ValidationException.class);
+			}
+			
+			try {
+				productUseCase.findAllProducts(60, null, null);
+			} catch (Exception e) {
+				assertThatExceptionOfType(ValidationException.class);
+			}
+		}
 
 		private Product getProduct() throws Exception {
 
@@ -210,6 +262,6 @@ public class ProductUseCaseTest {
 
 			return product;
 		}
-	}
+	}	
 }
 
