@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: menuguru-deployment
+  name: menuguru-product-deployment
   labels:
-    menuguru.fiapprj.perisatto.com/name: service
+    menuguru.fiapprj.perisatto.com/name: product-service
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: menuguru-deployment
+    name: menuguru-product-deployment
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
