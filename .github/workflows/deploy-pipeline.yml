@@ -42,5 +42,5 @@ jobs:
           VERSION: '${{github.event.inputs.version}}'
         run: |
           REPO_NAME=${GITHUB_REPOSITORY#*/}		
-          helm upgrade --install menuguru-customer --set image.tag=$VERSION --set mysqlUrl=$MYSQL_URL --set mysqlPort=$MYSQL_PORT --set mysql_user=$MYSQL_USER \
+          helm upgrade --install $REPO_NAME --set image.tag=$VERSION --set mysqlUrl=$MYSQL_URL --set mysqlPort=$MYSQL_PORT --set mysql_user=$MYSQL_USER \
           --set mysql_password=$MYSQL_PASSWORD ./helm-chart
