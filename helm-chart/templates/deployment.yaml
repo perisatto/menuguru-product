@@ -4,6 +4,7 @@ metadata:
   name: menuguru-product-deployment
   labels:
     menuguru.fiapprj.perisatto.com/name: product-service
+    namespace: {{ .Values.namespace }}	
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -18,7 +19,7 @@ spec:
         menuguru.fiapprj.perisatto.com/name: product-service
     spec:           
       containers:
-        - name: menuguru-service
+        - name: menuguru-product-service
           image: rperisatto/menuguru-product:{{ .Values.image.tag }}
           env:
             - name: MYSQL_URL
