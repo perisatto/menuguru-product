@@ -4,6 +4,7 @@ metadata:
   name: menuguru-product-deployment
   labels:
     menuguru.fiapprj.perisatto.com/name: product-service
+	namespace: {{ .Values.namespace }}	
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
